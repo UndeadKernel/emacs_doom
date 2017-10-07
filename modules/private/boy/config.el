@@ -17,3 +17,5 @@
       kept-old-versions 2
       version-control t)
 
+(def-package! goto-last-change
+  :commands goto-last-change)

@@ -18,16 +18,16 @@
  "C-S-<down>" '+boy/window-move-down
  ;; Switching windows
  "C-x p" 'doom/other-popup
+ ;; TODO: create module fot 'switch-window'
  "C-x o" 'ace-window
  "C-x C-o" 'doom/switch-to-last-window
- "C-x O" 'switch-window-then-swap-buffer
+ ;; TODO: create module fot 'switch-window'
+ ;; "C-x O" 'switch-window-then-swap-buffer
  ;; Misc plugins
- "<f9>" 'doom/neotree
+ "<f9>" '+neotree/toggle
  "C-=" 'er/expand-region
  "C-c ." 'goto-last-change
  "C-'" 'imenu-list-minor-mode
- ;; smex plugin
- "M-x"  'execute-extended-command
  ;; Smart-forward
  "M-<up>" 'smart-up
  "M-<down>" 'smart-down
@@ -40,10 +40,8 @@
  "C-M-b" 'sp-backward-sexp
  "C-M-d" 'sp-splice-sexp
  ;; Company mode
- "<C-tab>" 'doom/company-complete
- ;; git-messenger
- " C-x v p" 'git-messenger:popup-message
- ;; Counsel Bindings
+ "<C-tab>" '+company/complete
+  ;; Counsel Bindings
  "C-h b" 'counsel-descbinds
 ;; Repl Toggle
  "C-c C-z" 'doom/repl

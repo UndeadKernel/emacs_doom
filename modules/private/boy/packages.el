@@ -1,0 +1,5 @@
+;; -*- no-byte-compile: t; -*-
+;;; private/boy/packages.el
+
+(package! goto-last-change)
+
