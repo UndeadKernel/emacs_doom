@@ -1,27 +1,21 @@
 ;;; private/boy/+bindings.el -*- lexical-binding: t; -*-
 
 (map!
- ;; My function bindings
- "M-n" 'my-down-scroll
- "M-p" 'my-up-scroll
- "M-d" 'my-delete-word
- "<M-backspace>" 'my-backward-delete-word
+ ;; My (boy) function bindings
+ "M-n" '+boy/down-scroll
+ "M-p" '+boy/up-scroll
+ "M-d" '+boy/delete-word
+ "<M-backspace>" '+boy/backward-delete-word
  ;; Editor related bindings
- "C-a" 'doom/move-to-bol
+ "C-a" #'+boy/move-to-bol
  "C-s" 'swiper
  "C-r" 'swiper
- ;; Line-wise mouse selection on margin
- "<left-margin> <down-mouse-1>" 'doom/mouse-drag-line
- "<left-margin> <mouse-1>"      'doom/mouse-select-line
- "<left-margin> <drag-mouse-1>" 'doom/mouse-select-line
  ;; Buffer related bindings
- "C-x 0" 'doom/delete-window
- "C-x 1" 'doom/delete-other-windows
- "C-S-<left>" (λ! (doom/move-buffer 'left))
- "C-S-<right>" (λ! (doom/move-buffer 'right))
- "C-S-<up>" (λ! (doom/move-buffer 'up))
- "C-S-<down>" (λ! (doom/move-buffer 'down))
- "C-x b" 'doom/ivy-switch-buffer
+ "C-x k" 'doom/kill-this-buffer
+ "C-S-<left>" '+boy/window-move-left
+ "C-S-<right>" '+boy/window-move-right
+ "C-S-<up>" '+boy/window-move-up
+ "C-S-<down>" '+boy/window-move-down
  ;; Switching windows
  "C-x p" 'doom/other-popup
  "C-x o" 'ace-window
@@ -33,8 +27,7 @@
  "C-c ." 'goto-last-change
  "C-'" 'imenu-list-minor-mode
  ;; smex plugin
- "M-x"  'smex
- "M-X"  'smex-major-mode-commands
+ "M-x"  'execute-extended-command
  ;; Smart-forward
  "M-<up>" 'smart-up
  "M-<down>" 'smart-down
