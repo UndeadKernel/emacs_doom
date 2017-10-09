@@ -19,3 +19,6 @@
 
 (def-package! goto-last-change
   :commands goto-last-change)
+
+(def-package! resize-window
+  :commands (resize-window))

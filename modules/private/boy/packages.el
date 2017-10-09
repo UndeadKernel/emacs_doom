@@ -2,4 +2,5 @@
 ;;; private/boy/packages.el
 
 (package! goto-last-change)
+(package! resize-window)
 

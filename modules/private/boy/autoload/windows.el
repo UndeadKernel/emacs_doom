@@ -10,7 +10,7 @@
 (defun +boy/window-move-down () "See `+boy--window-swap'"  (interactive) (+boy--window-swap 'down))
 
 ;;;###autoload
-(defun doom/switch-to-last-window ()
+(defun +boy/switch-to-last-window ()
   "Switch to the previously selected window, skipping any other window in between."
   (interactive)
   (let ((win (get-mru-window t t t)))

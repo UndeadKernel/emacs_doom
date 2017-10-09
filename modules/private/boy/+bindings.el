@@ -11,6 +11,8 @@
  "C-s" 'swiper
  "C-r" 'swiper
  ;; Buffer related bindings
+ "C-x b" 'persp-switch-to-buffer
+ "C-x B" 'switch-to-buffer
  "C-x k" 'doom/kill-this-buffer
  "C-S-<left>" '+boy/window-move-left
  "C-S-<right>" '+boy/window-move-right
@@ -18,11 +20,8 @@
  "C-S-<down>" '+boy/window-move-down
  ;; Switching windows
  "C-x p" 'doom/other-popup
- ;; TODO: create module fot 'switch-window'
- "C-x o" 'ace-window
- "C-x C-o" 'doom/switch-to-last-window
- ;; TODO: create module fot 'switch-window'
- ;; "C-x O" 'switch-window-then-swap-buffer
+ "C-x C-o" '+boy/switch-to-last-window
+ "C-x O" 'switch-window-then-swap-buffer
  ;; Misc plugins
  "<f9>" '+neotree/toggle
  "C-=" 'er/expand-region
@@ -44,12 +43,13 @@
   ;; Counsel Bindings
  "C-h b" 'counsel-descbinds
 ;; Repl Toggle
- "C-c C-z" 'doom/repl
+ "C-c C-z" '+eval/open-repl
 ;; Magit/git bindings
  (:prefix "C-c m"
-   "s" 'doom/git-magit
-   "i" 'doom/git-issues
-   "b" 'browse-at-remote)
+   "s" 'magit-status
+   "i" '+vcs/git-browse-issues
+   "b" '+vcs/git-browse)
+;; Bury popup buffers with only C-g
  (:after nodejs-repl
    (:map nodejs-repl-mode-map
      "C-g" 'doom/popup-close))
@@ -57,31 +57,32 @@
    (:map ielm-map
      "C-g" 'doom/popup-close))
  ;; Working with windows, workgroups and stuff.
- "<pause>" (λ! (doom/workgroup-load (concat wg-workgroup-directory doom-wg-perpetual)))
+ ;;"<pause>" (λ! (doom/workgroup-load (concat wg-workgroup-directory doom-wg-perpetual)))
  (:prefix "C-c w"
-   "d" 'doom/tab-display
-   "r" 'doom/tab-rename
-   "c" 'doom/tab-create
-   "k" 'doom/tab-kill
-   "s" 'doom/tab-save
-   "l" 'doom/tab-load
+   "d" '+workspace/display
+   "r" '+workspace/rename
+   "c" '+workspace/new
+   "k" '+workspace/delete
+   "s" '+workspace/save
+   "S" '+workspace/save-session
+   "l" '+workspace/load
+   "L" '+workspace/load-session
    "o" 'doom/tab-kill-others
-   "u" 'doom/undo-window-change
-   "U" 'doom/redo-window-change
-   "p" 'doom/tab-left
-   "n" 'doom/tab-right
+   "u" 'winner-undo
+   "U" 'winner-redo
+   "p" '+workspace/switch-left
+   "n" '+workspace/switch-right
    "h" 'resize-window
-   "<left>" (λ! (wg-offset-workgroup-left) (doom/tab-display))
-   "<right>" (λ! (wg-offset-workgroup-right) (doom/tab-display))
-   "1" (λ! (doom/tab-switch-to 0))
-   "2" (λ! (doom/tab-switch-to 1))
-   "3" (λ! (doom/tab-switch-to 2))
-   "4" (λ! (doom/tab-switch-to 3))
-   "5" (λ! (doom/tab-switch-to 4))
-   "6" (λ! (doom/tab-switch-to 5))
-   "7" (λ! (doom/tab-switch-to 6))
-   "8" (λ! (doom/tab-switch-to 7))
-   "9" (λ! (doom/tab-switch-to 8)))
+   "1" (λ! (+workspace/switch-to 0))
+   "2" (λ! (+workspace/switch-to 1))
+   "3" (λ! (+workspace/switch-to 2))
+   "4" (λ! (+workspace/switch-to 3))
+   "5" (λ! (+workspace/switch-to 4))
+   "6" (λ! (+workspace/switch-to 5))
+   "7" (λ! (+workspace/switch-to 6))
+   "8" (λ! (+workspace/switch-to 7))
+   "9" (λ! (+workspace/switch-to 8))
+   "0" '+workspace/switch-to-last)
  (:after core-scratch
    (:map doom-mode-map
      "C-c C-c" 'doom-scratch-clear
