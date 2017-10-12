@@ -1,6 +1,7 @@
 ;;; private/boy/+bindings.el -*- lexical-binding: t; -*-
 
 (map!
+ "M-x" 'execute-extended-command
  ;; My (boy) function bindings
  "M-n" '+boy/down-scroll
  "M-p" '+boy/up-scroll
@@ -22,6 +23,10 @@
  "C-x p" 'doom/other-popup
  "C-x C-o" '+boy/switch-to-last-window
  "C-x O" 'switch-window-then-swap-buffer
+ ;; Doom emacs bindings
+ "C-c C-s" 'doom/open-scratch-buffer
+ "C-`"     'doom/popup-toggle
+ "C-~"     'doom/popup-raise
  ;; Misc plugins
  "<f9>" '+neotree/toggle
  "C-=" 'er/expand-region
@@ -50,12 +55,9 @@
    "i" '+vcs/git-browse-issues
    "b" '+vcs/git-browse)
 ;; Bury popup buffers with only C-g
- (:after nodejs-repl
-   (:map nodejs-repl-mode-map
-     "C-g" 'doom/popup-close))
- (:after ielm
-   (:map ielm-map
-     "C-g" 'doom/popup-close))
+ (:after core-popups
+   (:map doom-popup-mode-map
+     "C-g" 'doom/popup-close-maybe))
  ;; Working with windows, workgroups and stuff.
  ;;"<pause>" (λ! (doom/workgroup-load (concat wg-workgroup-directory doom-wg-perpetual)))
  (:prefix "C-c w"
@@ -83,22 +85,6 @@
    "8" (λ! (+workspace/switch-to 7))
    "9" (λ! (+workspace/switch-to 8))
    "0" '+workspace/switch-to-last)
- (:after core-scratch
-   (:map doom-mode-map
-     "C-c C-c" 'doom-scratch-clear
-     "C-c C-k" 'doom/kill-real-buffer
-     "C-x k" 'doom/kill-real-buffer
-     "C-c C-r" (λ! (call-interactively 'counsel-recentf))
-     "C-c C-e" (λ! (find-file (f-expand "init.el" doom-emacs-dir)))
-     "C-c C-h" (λ! (browse-url "https://github.com/UndeadKernel/.emacs.d"))
-     "C-c C-l" (λ! (doom/workgroup-load (concat wg-workgroup-directory "last") t))))
- ;; imenu stuff
- (:after imenu-list
-   (:map imenu-list-major-mode-map
-     "C-g" 'doom/imenu-list-quit
-     "RET" 'imenu-list-goto-entry
-     "SPC" 'imenu-list-display-entry
-     [tab] 'hs-toggle-hiding))
  ;; Company mode and the like
  (:after company
    (:map company-active-map
@@ -110,75 +96,72 @@
      "C-S-s"      'company-search-candidates
      "C-s"        'company-filter-candidates
      "<C-tab>"    'company-complete-common-or-cycle
-     [tab]        'doom/company-complete-common-or-complete-full
+     [tab]        'company-complete-common-or-cycle
      [backtab]    'company-select-previous
      "C-g"        (λ! (company-abort))
      [C-return]   'counsel-company)
-   (:map company-search-map
-     "C-n"        'company-search-repeat-forward
-     "C-p"        'company-search-repeat-backward
-     "C-g"     'company-search-abort))
+ (:map company-search-map
+   "C-n"        'company-search-repeat-forward
+   "C-p"        'company-search-repeat-backward
+   "C-s"        (λ! (company-search-abort) (company-filter-candidates))
+   "C-g"        'company-search-abort))
  ;; NeoTree bindings
  (:after neotree
-   (:map neotree-mode-map
-     "q"       'neotree-hide
-     [return]  'neotree-enter
-     "RET"     'neotree-enter
-     "v"       'neotree-enter-vertical-split
-     "s"       'neotree-enter-horizontal-split
-     "c"       'neotree-create-node
-     "D"       'neotree-delete-node
-     "g"       'neotree-refresh
-     "r"       'neotree-rename-node
-     "R"       'neotree-change-root))
+   :map neotree-mode-map
+   "q"       'neotree-hide
+   [return]  'neotree-enter
+   "RET"     'neotree-enter
+   "SPC"     'neotree-quick-look
+   "v"       'neotree-enter-vertical-split
+   "s"       'neotree-enter-horizontal-split
+   "c"       'neotree-create-node
+   "D"       'neotree-delete-node
+   "g"       'neotree-refresh
+   "r"       'neotree-rename-node
+   "R"       'neotree-refresh
+   "h"       '+neotree/collapse-or-up
+   "l"       '+neotree/expand-or-open
+   "n"       'neotree-next-line
+   "p"       'neotree-previous-line
+   "N"       'neotree-select-next-sibling-node
+   "P"       'neotree-select-previous-sibling-node)
  ;; Refactoring and compilation
  (:map prog-mode-map
    "M-RET" 'emr-show-refactor-menu)
  (:after cc-mode
-   ;; Compile
-   "<f10>" 'doom/build
-   ;; Recompile
-   "C-<f10>" (λ! (doom/build nil))
    (:map c++-mode-map
      "M-RET" 'srefactor-refactor-at-point)
    (:map c-mode-map
      "M-RET" 'srefactor-refactor-at-point))
- (:after re-builder
-   (:map reb-mode-map
-     "C-g" 'reb-quit
-     [backtab] 'reb-change-syntax))
  (:after help-mode
    (:map help-map
      "e" 'doom/popup-toggle-messages)
    (:map help-mode-map
-     "o" 'ace-link-help))
+     "o" 'ace-link-help
+     ">" 'help-go-forward
+     "<" 'help-go-back))
  (:after info
    (:map Info-mode-map
      "o" 'ace-link-info))
  ;; Yasnippet
  (:after yasnippet
-   ;; keymap while editing an inserted snippet
-   (:map yas-keymap
-     "C-e"           'doom/yas-goto-end-of-field
-     "C-a"           'doom/yas-goto-start-of-field
-     "<S-tab>"       'yas-prev-field
-     "<M-backspace>" 'doom/yas-clear-to-sof
-     [backspace]     'doom/yas-backspace
-     "<delete>"      'doom/yas-delete)
    ;; keymap while yasnippet is active
    (:map yas-minor-mode-map
-     "C-c TAB" 'doom/yas-expand-or-insert))
+     "C-c TAB" 'doom/yas-expand-or-insert)
+   ;; keymap while editing an inserted snippet
+   (:map yas-keymap
+     "C-e"           'snippets/goto-end-of-field
+     "C-a"           'snippets/goto-start-of-field
+     "<S-tab>"       'yas-prev-field
+     "<M-backspace>" '+snippets/delete-to-start-of-field
+     [backspace]     '+snippets/delete-backward-char
+     [delete]      '+snippets/delete-forward-char-or-field))
  ;; Flycheck
  (:after flycheck
    (:map flycheck-error-list-mode-map
      "C-n" 'flycheck-error-list-next-error
      "C-p" 'flycheck-error-list-previous-error
      "RET" 'flycheck-error-list-goto-error))
- ;; git-messenger
- (:after git-messenger
-   (:map git-messenger-map
-     "C-g"  'git-messenger:popup-close
-     "q"    'git-messenger:popup-close))
  ;; ivy stuff
  (:after ivy
    (:map ivy-minibuffer-map
@@ -188,24 +171,6 @@
    (:map magit-mode-map
      ;; Don't let Tab binding in my-bindings conflict with Tab in magit
      "<tab>" 'magit-section-toggle))
- (:after org-agenda
-   (:map org-agenda-mode-map
-     "C-g" 'doom/org-agenda-quit
-     "q" 'doom/org-agenda-quit))
- ;; pythony + anaconda mode
- ;; (:after anaconda-mode
- ;;   (:map anaconda-mode-map
- ;;     "M-." 'anaconda-mode-find-definitions))
- (:after nose
-   (:map nose-mode-map
-     (:prefix "C-c"
-       "c" 'nosetests-again
-       "a" 'nosetests-all
-       "." 'nosetests-one
-       "m" 'nosetests-module
-       "pa" 'nosetests-pdb-all
-       "p." 'nosetests-pdb-one
-       "pm" 'nosetests-pdb-module)))
  (:after latex
    (:when (s-present? doom-synonyms-key)
      ("C-c s" 'www-synonyms-insert-synonym)))
