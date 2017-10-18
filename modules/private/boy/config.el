@@ -17,8 +17,19 @@
       kept-old-versions 2
       version-control t)
 
+;; Show me where I made the last change in a document.
 (def-package! goto-last-change
   :commands goto-last-change)
 
+;; Resize windows interactively.
 (def-package! resize-window
   :commands (resize-window))
+
+;; Latex synonyms
+(defvar boy--synonyms-key ""
+  "API key from http://thesaurus.altervista.org that gives us synonyms.")
+(def-package! www-synonyms
+  :if (s-present? boy--synonyms-key)
+  :commands (www-synonyms-insert-synonym www-synonyms-change-language)
+  :config
+  (setq www-synonyms-key boy--synonyms-key))

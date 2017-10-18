@@ -3,26 +3,26 @@
 (map!
  "M-x" 'execute-extended-command
  ;; My (boy) function bindings
- "M-n" '+boy/down-scroll
- "M-p" '+boy/up-scroll
- "M-d" '+boy/delete-word
+ "M-n"           '+boy/down-scroll
+ "M-p"           '+boy/up-scroll
+ "M-d"           '+boy/delete-word
  "<M-backspace>" '+boy/backward-delete-word
  ;; Editor related bindings
- "C-a" #'+boy/move-to-bol
+ "C-a" '+boy/move-to-bol
  "C-s" 'swiper
  "C-r" 'swiper
  ;; Buffer related bindings
  "C-x b" 'persp-switch-to-buffer
  "C-x B" 'switch-to-buffer
  "C-x k" 'doom/kill-this-buffer
- "C-S-<left>" '+boy/window-move-left
+ "C-S-<left>"  '+boy/window-move-left
  "C-S-<right>" '+boy/window-move-right
- "C-S-<up>" '+boy/window-move-up
- "C-S-<down>" '+boy/window-move-down
+ "C-S-<up>"    '+boy/window-move-up
+ "C-S-<down>"  '+boy/window-move-down
  ;; Switching windows
- "C-x p" 'doom/other-popup
+ "C-x p"   'doom/other-popup
  "C-x C-o" '+boy/switch-to-last-window
- "C-x O" 'switch-window-then-swap-buffer
+ "C-x O"   'switch-window-then-swap-buffer
  ;; Doom emacs bindings
  "C-c C-s" 'doom/open-scratch-buffer
  "C-`"     'doom/popup-toggle
@@ -172,7 +172,7 @@
      ;; Don't let Tab binding in my-bindings conflict with Tab in magit
      "<tab>" 'magit-section-toggle))
  (:after latex
-   (:when (s-present? doom-synonyms-key)
+   (:when (s-present? boy--synonyms-key)
      ("C-c s" 'www-synonyms-insert-synonym)))
  ;; (:after ein-notebooklist
  ;;   (:map ein:notebooklist-mode-map
